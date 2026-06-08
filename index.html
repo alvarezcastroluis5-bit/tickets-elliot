@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Consulta de Tickets Elliot</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #050816, #0f172a, #1e293b);
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 480px;
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
+      backdrop-filter: blur(10px);
+      text-align: center;
+    }
+
+    .logo {
+      font-size: 45px;
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: 26px;
+      margin-bottom: 10px;
+      color: #38bdf8;
+    }
+
+    p {
+      color: #cbd5e1;
+      margin-bottom: 20px;
+      line-height: 1.5;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px;
+      border-radius: 12px;
+      border: none;
+      outline: none;
+      font-size: 16px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 12px;
+      background: #38bdf8;
+      color: #020617;
+      font-size: 17px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background: #0ea5e9;
+    }
+
+    .resultado {
+      margin-top: 25px;
+      text-align: left;
+      display: none;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 18px;
+      margin-top: 15px;
+      border-left: 5px solid #38bdf8;
+    }
+
+    .card h2 {
+      font-size: 20px;
+      margin-bottom: 10px;
+      color: #facc15;
+    }
+
+    .ticket {
+      background: #020617;
+      color: #38bdf8;
+      padding: 10px;
+      margin: 8px 0;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+
+    .error {
+      background: rgba(239, 68, 68, 0.15);
+      color: #fecaca;
+      padding: 15px;
+      border-radius: 12px;
+      margin-top: 20px;
+      display: none;
+    }
+
+    .footer {
+      margin-top: 25px;
+      font-size: 13px;
+      color: #94a3b8;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="logo">🎟️</div>
+
+    <h1>Consulta tus Tickets</h1>
+
+    <p>
+      Ingresa tu número de WhatsApp para verificar tus tickets asignados
+      para el sorteo de Elliot.
+    </p>
+
+    <input type="text" id="whatsapp" placeholder="Ejemplo: 62125172">
+
+    <button onclick="buscarTickets()">Consultar tickets</button>
+
+    <div class="error" id="error">
+      No se encontraron tickets con ese número.
+    </div>
+
+    <div class="resultado" id="resultado"></div>
+
+    <div class="footer">
+      Elliot Entertainment © 2026 <br>
+      Sorteo oficial con tickets digitales
+    </div>
+  </div>
+
+  <script>
+    const participantes = [
+      {
+        nombre: "Juan Pérez",
+        whatsapp: "62125172",
+        tickets: ["ELL-0001", "ELL-0002", "ELL-0003"],
+        estado: "Válidos"
+      },
+      {
+        nombre: "María López",
+        whatsapp: "70000000",
+        tickets: ["ELL-0004", "ELL-0005"],
+        estado: "Válidos"
+      },
+      {
+        nombre: "Carlos Rojas",
+        whatsapp: "75555555",
+        tickets: ["ELL-0006"],
+        estado: "Válido"
+      }
+    ];
+
+    function buscarTickets() {
+      const numeroIngresado = document.getElementById("whatsapp").value.trim();
+      const resultado = document.getElementById("resultado");
+      const error = document.getElementById("error");
+
+      resultado.innerHTML = "";
+      resultado.style.display = "none";
+      error.style.display = "none";
+
+      if (numeroIngresado === "") {
+        error.innerText = "Por favor ingresa tu número de WhatsApp.";
+        error.style.display = "block";
+        return;
+      }
+
+      const cliente = participantes.find(
+        persona => persona.whatsapp === numeroIngresado
+      );
+
+      if (!cliente) {
+        error.innerText = "No se encontraron tickets con ese número. Verifica que esté escrito correctamente.";
+        error.style.display = "block";
+        return;
+      }
+
+      let ticketsHTML = "";
+
+      cliente.tickets.forEach(ticket => {
+        ticketsHTML += `<div class="ticket">${ticket}</div>`;
+      });
+
+      resultado.innerHTML = `
+        <div class="card">
+          <h2>${cliente.nombre}</h2>
+          <p><strong>WhatsApp:</strong> ${cliente.whatsapp}</p>
+          <p><strong>Estado:</strong> ${cliente.estado}</p>
+          <p><strong>Tickets asignados:</strong></p>
+          ${ticketsHTML}
+        </div>
+      `;
+
+      resultado.style.display = "block";
+    }
+  </script>
+</body>
+</html>
